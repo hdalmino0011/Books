@@ -1,198 +1,215 @@
 document.addEventListener("DOMContentLoaded", function() {
-  // DOM Elements
+  var homeSection = document.getElementById("homeSection");
   var librarySection = document.getElementById("librarySection");
   var uploadSection = document.getElementById("uploadSection");
+  var aboutSection = document.getElementById("aboutSection");
   var loginSection = document.getElementById("loginSection");
   
+  var homeLink = document.getElementById("homeLink");
   var libraryLink = document.getElementById("libraryLink");
   var uploadLink = document.getElementById("uploadLink");
+  var aboutLink = document.getElementById("aboutLink");
   var loginLink = document.getElementById("loginLink");
   
   var library = document.getElementById("library");
   var uploadForm = document.getElementById("uploadForm");
   var loginForm = document.getElementById("loginForm");
   var searchInput = document.getElementById("searchInput");
-  var userSection = document.getElementById("userSection");
-  var userStatus = document.getElementById("userStatus");
-  var userAvatar = document.getElementById("userAvatar");
+  var userArea = document.getElementById("userArea");
+  var userDisplay = document.getElementById("userDisplay");
   var logoutBtn = document.getElementById("logoutBtn");
+  var getStartedBtn = document.getElementById("getStartedBtn");
+  var exploreBtn = document.getElementById("exploreBtn");
 
   var loggedInUser = null;
-  var currentSection = 'library';
 
-  // Show notification
   function showNotification(message, type) {
     type = type || 'success';
     var notification = document.createElement('div');
     notification.className = 'notification ' + type;
     notification.textContent = message;
     document.body.appendChild(notification);
-    
     setTimeout(function() {
       notification.remove();
     }, 3000);
   }
 
-  // Navigation
-  function navigateTo(section) {
-    librarySection.classList.add('hidden');
-    uploadSection.classList.add('hidden');
-    loginSection.classList.add('hidden');
-    
-    libraryLink.classList.remove('active');
-    uploadLink.classList.remove('active');
-    loginLink.classList.remove('active');
-    
-    if (section === 'library') {
-      librarySection.classList.remove('hidden');
-      libraryLink.classList.add('active');
-    } else if (section === 'upload') {
-      uploadSection.classList.remove('hidden');
-      uploadLink.classList.add('active');
-    } else if (section === 'login') {
-      loginSection.classList.remove('hidden');
-      loginLink.classList.add('active');
-    }
-    
-    currentSection = section;
+  function hideAllSections() {
+    homeSection.classList.add("hidden");
+    librarySection.classList.add("hidden");
+    uploadSection.classList.add("hidden");
+    aboutSection.classList.add("hidden");
+    loginSection.classList.add("hidden");
   }
 
-  libraryLink.addEventListener('click', function(e) {
+  function removeActiveClass() {
+    homeLink.classList.remove("active");
+    libraryLink.classList.remove("active");
+    uploadLink.classList.remove("active");
+    aboutLink.classList.remove("active");
+    loginLink.classList.remove("active");
+  }
+
+  function navigateTo(section, link) {
+    hideAllSections();
+    removeActiveClass();
+    section.classList.remove("hidden");
+    link.classList.add("active");
+  }
+
+  function updateAuthUI() {
+    if (loggedInUser) {
+      userArea.style.display = "flex";
+      userDisplay.textContent = "Welcome, " + loggedInUser;
+      loginLink.style.display = "none";
+    } else {
+      userArea.style.display = "none";
+      loginLink.style.display = "block";
+    }
+  }
+
+  // Navigation
+  homeLink.addEventListener("click", function(e) {
     e.preventDefault();
-    navigateTo('library');
+    navigateTo(homeSection, homeLink);
+  });
+
+  libraryLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    navigateTo(librarySection, libraryLink);
     displayLibrary();
   });
 
-  uploadLink.addEventListener('click', function(e) {
+  uploadLink.addEventListener("click", function(e) {
     e.preventDefault();
     if (!loggedInUser) {
-      showNotification('Please login first to upload literature!', 'error');
-      navigateTo('login');
+      showNotification("Please login first to upload literature!", "error");
+      navigateTo(loginSection, loginLink);
       return;
     }
-    navigateTo('upload');
+    navigateTo(uploadSection, uploadLink);
   });
 
-  loginLink.addEventListener('click', function(e) {
+  aboutLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    navigateTo(aboutSection, aboutLink);
+  });
+
+  loginLink.addEventListener("click", function(e) {
     e.preventDefault();
     if (loggedInUser) {
-      showNotification('You are already logged in!', 'error');
+      showNotification("You are already logged in!", "error");
       return;
     }
-    navigateTo('login');
+    navigateTo(loginSection, loginLink);
   });
 
-  // Update UI based on auth state
-  function updateAuthUI() {
-    if (loggedInUser) {
-      userSection.style.display = 'flex';
-      userStatus.textContent = loggedInUser;
-      userAvatar.textContent = loggedInUser.charAt(0).toUpperCase();
-      loginLink.querySelector('span:last-child').textContent = 'Account';
+  // Hero buttons
+  getStartedBtn.addEventListener("click", function() {
+    if (!loggedInUser) {
+      navigateTo(loginSection, loginLink);
     } else {
-      userSection.style.display = 'none';
-      loginLink.querySelector('span:last-child').textContent = 'Login';
+      navigateTo(uploadSection, uploadLink);
     }
-  }
+  });
 
-  // Login handler
-  loginForm.addEventListener('submit', function(e) {
+  exploreBtn.addEventListener("click", function() {
+    navigateTo(librarySection, libraryLink);
+    displayLibrary();
+  });
+
+  // Login
+  loginForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    var username = document.getElementById('username').value.trim();
-    var password = document.getElementById('password').value.trim();
+    var username = document.getElementById("username").value.trim();
+    var password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-      showNotification('Please fill in all fields!', 'error');
+      showNotification("Please fill in all fields!", "error");
       return;
     }
 
     if (password.length < 3) {
-      showNotification('Password must be at least 3 characters!', 'error');
+      showNotification("Password must be at least 3 characters!", "error");
       return;
     }
 
     loggedInUser = username;
     updateAuthUI();
     loginForm.reset();
-    showNotification('Welcome back, ' + username + '!');
-    navigateTo('library');
-    displayLibrary();
+    showNotification("Welcome, " + username + "!");
+    navigateTo(homeSection, homeLink);
   });
 
-  // Logout handler
-  logoutBtn.addEventListener('click', function() {
+  // Logout
+  logoutBtn.addEventListener("click", function() {
     loggedInUser = null;
     updateAuthUI();
-    showNotification('Logged out successfully!');
-    navigateTo('library');
-    displayLibrary();
+    showNotification("Logged out successfully!");
+    navigateTo(homeSection, homeLink);
   });
 
-  // Upload handler
-  uploadForm.addEventListener('submit', function(e) {
+  // Upload
+  uploadForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    var title = document.getElementById('title').value.trim();
-    var content = document.getElementById('content').value.trim();
+    var title = document.getElementById("title").value.trim();
+    var content = document.getElementById("content").value.trim();
 
     if (!title || !content) {
-      showNotification('Please fill in all fields!', 'error');
+      showNotification("Please fill in all fields!", "error");
       return;
     }
 
     if (content.length < 10) {
-      showNotification('Content must be at least 10 characters long!', 'error');
+      showNotification("Content must be at least 10 characters long!", "error");
       return;
     }
 
     LiteratureDB.create(title, content, loggedInUser);
     uploadForm.reset();
-    showNotification('Literature published successfully!');
-    navigateTo('library');
+    showNotification("Literature published successfully!");
+    navigateTo(librarySection, libraryLink);
     displayLibrary();
   });
 
-  // Delete handler
+  // Delete
   function deleteLiterature(id) {
-    if (confirm('Are you sure you want to delete this literature?')) {
+    if (confirm("Are you sure you want to delete this literature?")) {
       LiteratureDB.delete(id);
       displayLibrary();
-      showNotification('Literature deleted successfully!');
+      showNotification("Literature deleted successfully!");
     }
   }
 
   // Display library
   function displayLibrary(query) {
-    library.innerHTML = '';
-    
+    library.innerHTML = "";
     var items = query ? LiteratureDB.search(query) : LiteratureDB.getAll();
-    
+
     if (items.length === 0) {
       library.innerHTML = '<div class="empty-state"><h3>No Literature Found</h3><p>' + 
-        (query ? 'No results match your search.' : 'Be the first to share your literature!') + 
+        (query ? "No results match your search." : "Be the first to share your literature!") + 
         '</p></div>';
       return;
     }
 
     items.forEach(function(item) {
-      var div = document.createElement('div');
-      div.classList.add('library-item');
+      var div = document.createElement("div");
+      div.classList.add("library-item");
       
-      var preview = item.content.length > 200 
-        ? item.content.substring(0, 200) + '...' 
-        : item.content;
-      
-      var date = new Date(item.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+      var preview = item.content.length > 200 ? item.content.substring(0, 200) + "..." : item.content;
+      var date = new Date(item.date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
       });
 
-      var deleteButton = '';
+      var deleteButton = "";
       if (loggedInUser === item.author) {
-        deleteButton = '<div class="item-actions"><button class="action-btn delete-btn" data-id="' + item.id + '">&#128465;</button></div>';
+        deleteButton = '<div class="item-actions"><button data-id="' + item.id + '">Delete</button></div>';
       }
 
-      var readMoreButton = '';
+      var readMoreButton = "";
       if (item.content.length > 200) {
         readMoreButton = '<button class="read-more-btn">Read More</button>';
       }
@@ -202,50 +219,42 @@ document.addEventListener("DOMContentLoaded", function() {
           '<h3>' + item.title + '</h3>' +
           deleteButton +
         '</div>' +
-        '<div class="item-meta">' +
-          '<span class="author-avatar">' + item.author.charAt(0).toUpperCase() + '</span>' +
-          '<span>' + item.author + '</span>' +
-          '<span>-</span>' +
-          '<span>' + date + '</span>' +
-        '</div>' +
+        '<div class="item-meta">By ' + item.author + ' on ' + date + '</div>' +
         '<div class="item-content">' + preview + '</div>' +
         readMoreButton;
-      
-      // Delete button handler
-      var deleteBtn = div.querySelector('.delete-btn');
+
+      var deleteBtn = div.querySelector(".item-actions button");
       if (deleteBtn) {
-        deleteBtn.addEventListener('click', function() {
+        deleteBtn.addEventListener("click", function() {
           deleteLiterature(item.id);
         });
       }
-      
-      // Read more button handler
-      var readMoreBtn = div.querySelector('.read-more-btn');
+
+      var readMoreBtn = div.querySelector(".read-more-btn");
       if (readMoreBtn) {
         var isExpanded = false;
-        readMoreBtn.addEventListener('click', function() {
-          var contentDiv = div.querySelector('.item-content');
+        readMoreBtn.addEventListener("click", function() {
+          var contentDiv = div.querySelector(".item-content");
           if (isExpanded) {
             contentDiv.textContent = preview;
-            readMoreBtn.textContent = 'Read More';
+            readMoreBtn.textContent = "Read More";
           } else {
             contentDiv.textContent = item.content;
-            readMoreBtn.textContent = 'Show Less';
+            readMoreBtn.textContent = "Show Less";
           }
           isExpanded = !isExpanded;
         });
       }
-      
+
       library.appendChild(div);
     });
   }
 
-  // Search handler
-  searchInput.addEventListener('input', function(e) {
+  // Search
+  searchInput.addEventListener("input", function(e) {
     displayLibrary(e.target.value);
   });
 
-  // Initial load
+  // Init
   updateAuthUI();
-  displayLibrary();
 });
