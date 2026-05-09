@@ -5,35 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LitShare - Free Literature Platform</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <div class="app-container">
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
       <div class="logo">
-        <div class="logo-icon">
-          <i class="fas fa-feather-alt"></i>
-        </div>
+        <div class="logo-icon">&#9998;</div>
         <h1>LitShare</h1>
       </div>
       
       <ul class="nav-links">
         <li>
           <a href="#" id="libraryLink" class="nav-item active">
-            <i class="fas fa-books"></i>
+            <span class="nav-icon">&#128218;</span>
             <span>Library</span>
           </a>
         </li>
         <li>
           <a href="#" id="uploadLink" class="nav-item">
-            <i class="fas fa-cloud-upload-alt"></i>
+            <span class="nav-icon">&#128228;</span>
             <span>Upload</span>
           </a>
         </li>
         <li>
           <a href="#" id="loginLink" class="nav-item">
-            <i class="fas fa-sign-in-alt"></i>
+            <span class="nav-icon">&#128100;</span>
             <span>Login</span>
           </a>
         </li>
@@ -43,9 +40,7 @@
         <div class="user-avatar" id="userAvatar"></div>
         <div class="user-info">
           <span id="userStatus"></span>
-          <button id="logoutBtn" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
-          </button>
+          <button id="logoutBtn" class="logout-btn">Logout</button>
         </div>
       </div>
     </nav>
@@ -57,7 +52,7 @@
         <div class="section-header">
           <h2>Library</h2>
           <div class="search-bar">
-            <i class="fas fa-search"></i>
+            <span class="search-icon">&#128269;</span>
             <input type="text" id="searchInput" placeholder="Search literature...">
           </div>
         </div>
@@ -78,9 +73,7 @@
             <label for="content">Content</label>
             <textarea id="content" placeholder="Write or paste your literature here..." required></textarea>
           </div>
-          <button type="submit" class="submit-btn">
-            <i class="fas fa-paper-plane"></i> Publish
-          </button>
+          <button type="submit" class="submit-btn">Publish</button>
         </form>
       </section>
 
@@ -89,28 +82,20 @@
         <div class="auth-container">
           <div class="auth-card">
             <div class="auth-header">
-              <i class="fas fa-feather-alt"></i>
+              <div class="auth-icon">&#9998;</div>
               <h2>Welcome Back</h2>
               <p>Sign in to share your stories</p>
             </div>
             <form id="loginForm" class="auth-form">
               <div class="form-group">
                 <label for="username">Username</label>
-                <div class="input-icon">
-                  <i class="fas fa-user"></i>
-                  <input type="text" id="username" placeholder="Enter your username" required>
-                </div>
+                <input type="text" id="username" placeholder="Enter your username" required>
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <div class="input-icon">
-                  <i class="fas fa-lock"></i>
-                  <input type="password" id="password" placeholder="Enter your password" required>
-                </div>
+                <input type="password" id="password" placeholder="Enter your password" required>
               </div>
-              <button type="submit" class="submit-btn">
-                <i class="fas fa-sign-in-alt"></i> Sign In
-              </button>
+              <button type="submit" class="submit-btn">Sign In</button>
             </form>
           </div>
         </div>
