@@ -7,101 +7,136 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar Navigation -->
-    <nav class="sidebar">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
       <div class="logo">
-        <div class="logo-icon">&#9998;</div>
         <h1>LitShare</h1>
       </div>
-      
-      <ul class="nav-links">
-        <li>
-          <a href="#" id="libraryLink" class="nav-item active">
-            <span class="nav-icon">&#128218;</span>
-            <span>Library</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" id="uploadLink" class="nav-item">
-            <span class="nav-icon">&#128228;</span>
-            <span>Upload</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" id="loginLink" class="nav-item">
-            <span class="nav-icon">&#128100;</span>
-            <span>Login</span>
-          </a>
-        </li>
-      </ul>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#" id="homeLink" class="nav-link active">Home</a></li>
+          <li><a href="#" id="libraryLink" class="nav-link">Library</a></li>
+          <li><a href="#" id="uploadLink" class="nav-link">Upload</a></li>
+          <li><a href="#" id="aboutLink" class="nav-link">About</a></li>
+          <li><a href="#" id="loginLink" class="nav-link">Login</a></li>
+        </ul>
+      </nav>
+      <div class="user-area" id="userArea" style="display: none;">
+        <span id="userDisplay"></span>
+        <button id="logoutBtn" class="btn-logout">Logout</button>
+      </div>
+    </div>
+  </header>
 
-      <div class="user-section" id="userSection" style="display: none;">
-        <div class="user-avatar" id="userAvatar"></div>
-        <div class="user-info">
-          <span id="userStatus"></span>
-          <button id="logoutBtn" class="logout-btn">Logout</button>
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Home Section -->
+    <section id="homeSection" class="section">
+      <div class="hero">
+        <h2>Welcome to LitShare</h2>
+        <p class="hero-text">A free platform for writers and readers to share and discover literature. Join our community and start sharing your stories today.</p>
+        <div class="hero-buttons">
+          <button id="getStartedBtn" class="btn btn-primary">Get Started</button>
+          <button id="exploreBtn" class="btn btn-secondary">Explore Library</button>
         </div>
       </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- Library Section -->
-      <section id="librarySection" class="content-section">
-        <div class="section-header">
-          <h2>Library</h2>
-          <div class="search-bar">
-            <span class="search-icon">&#128269;</span>
-            <input type="text" id="searchInput" placeholder="Search literature...">
-          </div>
+      
+      <div class="features">
+        <div class="feature-card">
+          <h3>Read</h3>
+          <p>Browse through a collection of stories, poems, and literary works shared by writers from around the world.</p>
         </div>
-        <div id="library" class="library-grid"></div>
-      </section>
-
-      <!-- Upload Section -->
-      <section id="uploadSection" class="content-section hidden">
-        <div class="section-header">
-          <h2>Share Your Literature</h2>
+        <div class="feature-card">
+          <h3>Write</h3>
+          <p>Share your own literary creations with our community. Upload your stories, poems, or any written work.</p>
         </div>
-        <form id="uploadForm" class="upload-form">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" id="title" placeholder="Enter the title of your work" required>
-          </div>
-          <div class="form-group">
-            <label for="content">Content</label>
-            <textarea id="content" placeholder="Write or paste your literature here..." required></textarea>
-          </div>
-          <button type="submit" class="submit-btn">Publish</button>
-        </form>
-      </section>
+        <div class="feature-card">
+          <h3>Connect</h3>
+          <p>Join a community of literature enthusiasts. Read works from different authors and get inspired.</p>
+        </div>
+      </div>
+    </section>
 
-      <!-- Login Section -->
-      <section id="loginSection" class="content-section hidden">
-        <div class="auth-container">
-          <div class="auth-card">
-            <div class="auth-header">
-              <div class="auth-icon">&#9998;</div>
-              <h2>Welcome Back</h2>
-              <p>Sign in to share your stories</p>
+    <!-- Library Section -->
+    <section id="librarySection" class="section hidden">
+      <div class="section-header">
+        <h2>Library</h2>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search literature...">
+        </div>
+      </div>
+      <div id="library" class="library-grid"></div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="uploadSection" class="section hidden">
+      <div class="section-header">
+        <h2>Share Your Literature</h2>
+      </div>
+      <form id="uploadForm" class="upload-form">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Enter the title of your work" required>
+        </div>
+        <div class="form-group">
+          <label for="content">Content</label>
+          <textarea id="content" placeholder="Write or paste your literature here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Publish</button>
+      </form>
+    </section>
+
+    <!-- About Section -->
+    <section id="aboutSection" class="section hidden">
+      <div class="about-content">
+        <h2>About LitShare</h2>
+        <div class="about-text">
+          <p>LitShare is a free, open platform dedicated to sharing literature with the world. Our mission is to provide a space where writers can publish their work and readers can discover new content.</p>
+          
+          <h3>How It Works</h3>
+          <p>Create an account, log in, and start uploading your literary works. Browse the library to read content shared by other users. All content is free and accessible to everyone.</p>
+          
+          <h3>Features</h3>
+          <ul>
+            <li>Free literature sharing</li>
+            <li>Simple and clean interface</li>
+            <li>Search and discover new content</li>
+            <li>No subscription required</li>
+            <li>Community-driven platform</li>
+          </ul>
+          
+          <h3>Contact</h3>
+          <p>Have questions or suggestions? Reach out to us at contact@litshare.com</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="loginSection" class="section hidden">
+      <div class="login-container">
+        <div class="login-card">
+          <h2>Sign In</h2>
+          <p class="login-subtitle">Login to share your literature</p>
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" placeholder="Enter your username" required>
             </div>
-            <form id="loginForm" class="auth-form">
-              <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter your username" required>
-              </div>
-              <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
-              </div>
-              <button type="submit" class="submit-btn">Sign In</button>
-            </form>
-          </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+          </form>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 LitShare. All rights reserved.</p>
+  </footer>
 
   <script src="database.js"></script>
   <script src="script.js"></script>
