@@ -1,58 +1,69 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function() {
   // DOM Elements
-  const sections = {
-    library: document.getElementById("librarySection"),
-    upload: document.getElementById("uploadSection"),
-    login: document.getElementById("loginSection")
-  };
+  var librarySection = document.getElementById("librarySection");
+  var uploadSection = document.getElementById("uploadSection");
+  var loginSection = document.getElementById("loginSection");
+  
+  var libraryLink = document.getElementById("libraryLink");
+  var uploadLink = document.getElementById("uploadLink");
+  var loginLink = document.getElementById("loginLink");
+  
+  var library = document.getElementById("library");
+  var uploadForm = document.getElementById("uploadForm");
+  var loginForm = document.getElementById("loginForm");
+  var searchInput = document.getElementById("searchInput");
+  var userSection = document.getElementById("userSection");
+  var userStatus = document.getElementById("userStatus");
+  var userAvatar = document.getElementById("userAvatar");
+  var logoutBtn = document.getElementById("logoutBtn");
 
-  const navItems = {
-    library: document.getElementById("libraryLink"),
-    upload: document.getElementById("uploadLink"),
-    login: document.getElementById("loginLink")
-  };
-
-  const library = document.getElementById("library");
-  const uploadForm = document.getElementById("uploadForm");
-  const loginForm = document.getElementById("loginForm");
-  const searchInput = document.getElementById("searchInput");
-  const userSection = document.getElementById("userSection");
-  const userStatus = document.getElementById("userStatus");
-  const userAvatar = document.getElementById("userAvatar");
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  let loggedInUser = null;
-  let currentSection = 'library';
+  var loggedInUser = null;
+  var currentSection = 'library';
 
   // Show notification
-  function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
+  function showNotification(message, type) {
+    type = type || 'success';
+    var notification = document.createElement('div');
+    notification.className = 'notification ' + type;
     notification.textContent = message;
     document.body.appendChild(notification);
     
-    setTimeout(() => {
+    setTimeout(function() {
       notification.remove();
     }, 3000);
   }
 
   // Navigation
   function navigateTo(section) {
-    Object.values(sections).forEach(s => s.classList.add('hidden'));
-    Object.values(navItems).forEach(n => n.classList.remove('active'));
+    librarySection.classList.add('hidden');
+    uploadSection.classList.add('hidden');
+    loginSection.classList.add('hidden');
     
-    sections[section].classList.remove('hidden');
-    navItems[section].classList.add('active');
+    libraryLink.classList.remove('active');
+    uploadLink.classList.remove('active');
+    loginLink.classList.remove('active');
+    
+    if (section === 'library') {
+      librarySection.classList.remove('hidden');
+      libraryLink.classList.add('active');
+    } else if (section === 'upload') {
+      uploadSection.classList.remove('hidden');
+      uploadLink.classList.add('active');
+    } else if (section === 'login') {
+      loginSection.classList.remove('hidden');
+      loginLink.classList.add('active');
+    }
+    
     currentSection = section;
   }
 
-  navItems.library.addEventListener('click', (e) => {
+  libraryLink.addEventListener('click', function(e) {
     e.preventDefault();
     navigateTo('library');
     displayLibrary();
   });
 
-  navItems.upload.addEventListener('click', (e) => {
+  uploadLink.addEventListener('click', function(e) {
     e.preventDefault();
     if (!loggedInUser) {
       showNotification('Please login first to upload literature!', 'error');
@@ -62,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navigateTo('upload');
   });
 
-  navItems.login.addEventListener('click', (e) => {
+  loginLink.addEventListener('click', function(e) {
     e.preventDefault();
     if (loggedInUser) {
       showNotification('You are already logged in!', 'error');
@@ -77,18 +88,18 @@ document.addEventListener("DOMContentLoaded", () => {
       userSection.style.display = 'flex';
       userStatus.textContent = loggedInUser;
       userAvatar.textContent = loggedInUser.charAt(0).toUpperCase();
-      navItems.login.querySelector('span').textContent = 'Account';
+      loginLink.querySelector('span:last-child').textContent = 'Account';
     } else {
       userSection.style.display = 'none';
-      navItems.login.querySelector('span').textContent = 'Login';
+      loginLink.querySelector('span:last-child').textContent = 'Login';
     }
   }
 
   // Login handler
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    var username = document.getElementById('username').value.trim();
+    var password = document.getElementById('password').value.trim();
 
     if (!username || !password) {
       showNotification('Please fill in all fields!', 'error');
@@ -103,13 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loggedInUser = username;
     updateAuthUI();
     loginForm.reset();
-    showNotification(`Welcome back, ${username}!`);
+    showNotification('Welcome back, ' + username + '!');
     navigateTo('library');
     displayLibrary();
   });
 
   // Logout handler
-  logoutBtn.addEventListener('click', () => {
+  logoutBtn.addEventListener('click', function() {
     loggedInUser = null;
     updateAuthUI();
     showNotification('Logged out successfully!');
@@ -118,10 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Upload handler
-  uploadForm.addEventListener('submit', (e) => {
+  uploadForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    const title = document.getElementById('title').value.trim();
-    const content = document.getElementById('content').value.trim();
+    var title = document.getElementById('title').value.trim();
+    var content = document.getElementById('content').value.trim();
 
     if (!title || !content) {
       showNotification('Please fill in all fields!', 'error');
@@ -150,67 +161,70 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Display library
-  function displayLibrary(query = '') {
+  function displayLibrary(query) {
     library.innerHTML = '';
     
-    const items = query ? LiteratureDB.search(query) : LiteratureDB.getAll();
+    var items = query ? LiteratureDB.search(query) : LiteratureDB.getAll();
     
     if (items.length === 0) {
-      library.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-books"></i>
-          <h3>No Literature Found</h3>
-          <p>${query ? 'No results match your search.' : 'Be the first to share your literature!'}</p>
-        </div>
-      `;
+      library.innerHTML = '<div class="empty-state"><h3>No Literature Found</h3><p>' + 
+        (query ? 'No results match your search.' : 'Be the first to share your literature!') + 
+        '</p></div>';
       return;
     }
 
-    items.forEach((item) => {
-      const div = document.createElement('div');
+    items.forEach(function(item) {
+      var div = document.createElement('div');
       div.classList.add('library-item');
       
-      const preview = item.content.length > 200 
+      var preview = item.content.length > 200 
         ? item.content.substring(0, 200) + '...' 
         : item.content;
       
-      const date = new Date(item.date).toLocaleDateString('en-US', {
+      var date = new Date(item.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       });
 
-      div.innerHTML = `
-        <div class="item-header">
-          <h3>${item.title}</h3>
-          ${loggedInUser === item.author ? `
-            <div class="item-actions">
-              <button class="action-btn delete-btn" title="Delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          ` : ''}
-        </div>
-        <div class="item-meta">
-          <span class="author-avatar">${item.author.charAt(0).toUpperCase()}</span>
-          <span>${item.author}</span>
-          <span>-</span>
-          <span>${date}</span>
-        </div>
-        <div class="item-content">${preview}</div>
-        ${item.content.length > 200 ? '<button class="read-more-btn">Read More</button>' : ''}
-      `;
+      var deleteButton = '';
+      if (loggedInUser === item.author) {
+        deleteButton = '<div class="item-actions"><button class="action-btn delete-btn" data-id="' + item.id + '">&#128465;</button></div>';
+      }
+
+      var readMoreButton = '';
+      if (item.content.length > 200) {
+        readMoreButton = '<button class="read-more-btn">Read More</button>';
+      }
+
+      div.innerHTML = 
+        '<div class="item-header">' +
+          '<h3>' + item.title + '</h3>' +
+          deleteButton +
+        '</div>' +
+        '<div class="item-meta">' +
+          '<span class="author-avatar">' + item.author.charAt(0).toUpperCase() + '</span>' +
+          '<span>' + item.author + '</span>' +
+          '<span>-</span>' +
+          '<span>' + date + '</span>' +
+        '</div>' +
+        '<div class="item-content">' + preview + '</div>' +
+        readMoreButton;
       
-      const deleteBtn = div.querySelector('.delete-btn');
+      // Delete button handler
+      var deleteBtn = div.querySelector('.delete-btn');
       if (deleteBtn) {
-        deleteBtn.addEventListener('click', () => deleteLiterature(item.id));
+        deleteBtn.addEventListener('click', function() {
+          deleteLiterature(item.id);
+        });
       }
       
-      const readMoreBtn = div.querySelector('.read-more-btn');
+      // Read more button handler
+      var readMoreBtn = div.querySelector('.read-more-btn');
       if (readMoreBtn) {
-        let isExpanded = false;
-        readMoreBtn.addEventListener('click', () => {
-          const contentDiv = div.querySelector('.item-content');
+        var isExpanded = false;
+        readMoreBtn.addEventListener('click', function() {
+          var contentDiv = div.querySelector('.item-content');
           if (isExpanded) {
             contentDiv.textContent = preview;
             readMoreBtn.textContent = 'Read More';
@@ -227,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Search handler
-  searchInput.addEventListener('input', (e) => {
+  searchInput.addEventListener('input', function(e) {
     displayLibrary(e.target.value);
   });
 
