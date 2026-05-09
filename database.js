@@ -1,10 +1,7 @@
-// Literature Database Module
-const LiteratureDB = (function() {
-  // Private variables
+var LiteratureDB = (function() {
   var data = [];
   var STORAGE_KEY = 'litshare_literature';
 
-  // Load data from localStorage
   function load() {
     try {
       var saved = localStorage.getItem(STORAGE_KEY);
@@ -15,7 +12,6 @@ const LiteratureDB = (function() {
     }
   }
 
-  // Save data to localStorage
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -24,54 +20,45 @@ const LiteratureDB = (function() {
     }
   }
 
-  // Initialize
   load();
 
-  // Public methods
   return {
-    // Create new literature
     create: function(title, content, author) {
       var newItem = {
         id: Date.now().toString(36) + Math.random().toString(36).substr(2),
         title: title,
         content: content,
         author: author,
-        date: new Date().toISOString(),
-        updatedAt: null
+        date: new Date().toISOString()
       };
       data.unshift(newItem);
       save();
       return newItem;
     },
 
-    // Get all literature
     getAll: function() {
       return data.slice().sort(function(a, b) {
         return new Date(b.date) - new Date(a.date);
       });
     },
 
-    // Search literature
     search: function(query) {
       if (!query.trim()) return this.getAll();
-      
       var searchTerm = query.toLowerCase().trim();
       return data.filter(function(item) {
-        return item.title.toLowerCase().includes(searchTerm) ||
-               item.content.toLowerCase().includes(searchTerm) ||
-               item.author.toLowerCase().includes(searchTerm);
+        return item.title.toLowerCase().indexOf(searchTerm) !== -1 ||
+               item.content.toLowerCase().indexOf(searchTerm) !== -1 ||
+               item.author.toLowerCase().indexOf(searchTerm) !== -1;
       }).sort(function(a, b) {
         return new Date(b.date) - new Date(a.date);
       });
     },
 
-    // Delete literature
     delete: function(id) {
       var initialLength = data.length;
       data = data.filter(function(item) {
         return item.id !== id;
       });
-      
       if (data.length < initialLength) {
         save();
         return true;
@@ -79,7 +66,6 @@ const LiteratureDB = (function() {
       return false;
     },
 
-    // Get count
     count: function() {
       return data.length;
     }
